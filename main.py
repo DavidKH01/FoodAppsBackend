@@ -11,7 +11,7 @@ app = Flask(__name__)  # Flask app instance initiated
 api = Api(app)  # Flask restful wraps Flask app around it.
 app.config.update({
     'APISPEC_SPEC': APISpec(
-        title='Awesome Project',
+        title='Food App',
         version='v1',
         plugins=[MarshmallowPlugin()],
         openapi_version='2.0.0'
@@ -38,7 +38,8 @@ class AwesomeAPI(MethodResource, Resource):
         '''
         Get method represents a GET API method
         '''
-        return {'message': 'My First Awesome API'}
+        message = 'hello there'
+        return {'message': message}
 
     @doc(description='My First GET Awesome API.', tags=['Awesome'])
     @use_kwargs(AwesomeRequestSchema, location=('json'))
@@ -50,8 +51,25 @@ class AwesomeAPI(MethodResource, Resource):
         return {'message': 'My First Awesome API'}
 
 
+class TestResponseSchema(Schema):
+    message = fields.Str(default='Success')
+
+
+class TestAPI(MethodResource, Resource):
+    @doc(description='Test API', tags=['Test'])
+    @marshal_with(TestResponseSchema)  # marshalling
+    def get(self):
+        '''
+        Get method represents a GET API method
+        '''
+        return {'message': 'Test is working!'}
+
+
 api.add_resource(AwesomeAPI, '/awesome')
 docs.register(AwesomeAPI)
+
+api.add_resource(TestAPI, '/test')
+docs.register(TestAPI)
 
 if __name__ == '__main__':
     app.run(debug=True)
