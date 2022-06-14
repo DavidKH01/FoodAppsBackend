@@ -2,9 +2,10 @@ import database_connect
 
 connect, cursor, db = database_connect.get_db()
 
+
 def test_select():
-    cursor.execute('SELECT * FROM restaurants')
-    print(cursor.fetchall())
+    cursor.execute('SELECT * FROM foods')
+    return cursor.fetchall()
     # connect.commit()
 
 
@@ -13,7 +14,8 @@ def test_insert():
     connect.commit()
 
 
+def get_cheap_foods():
+    cursor.execute("SELECT name FROM foods WHERE price_range = (%s)", ['$$'])
+    return cursor.fetchall()
 
-test_select()
-test_insert()
-test_select()
+
